@@ -19,16 +19,6 @@ func main() {
 	select {}
 }
 
-var Reset = "\033[0m"
-var Red = "\033[31m"
-var Green = "\033[32m"
-var Yellow = "\033[33m"
-var Blue = "\033[34m"
-var Magenta = "\033[35m"
-var Cyan = "\033[36m"
-var Gray = "\033[37m"
-var White = "\033[97m"
-
 func banner() {
 	ban := `
 	_______ _______      ___     _______ _______ _   ___ _______ __   __ _______ ___     ___     
@@ -45,3 +35,13 @@ func banner() {
 	fmt.Println("Prefix with" + Red + " [+] " + Reset + "related to JNDI exploit server.")
 	fmt.Println("------------------------------------------------------------------")
 }
+
+var Reset = "\033[0m"
+var Red = "\033[31m"
+var Green = "\033[32m"
+var Yellow = "\033[33m"
+var Blue = "\033[34m"
+var Magenta = "\033[35m"
+var Cyan = "\033[36m"
+var Gray = "\033[37m"
+var White = "\033[97m"
