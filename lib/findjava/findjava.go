@@ -11,7 +11,7 @@ func FindPath() string {
 	javapath, err := exec.Command("which", "java").Output()
 	if err != nil || len(javapath) == 0 {
 		fmt.Println("Java is not found.")
-		newjavapath := "./dependencies/jdk1.8.0_102/bin/java"
+		newjavapath := "./dependencies/jdk_1.8.0_102/bin/java"
 		fmt.Println("Java path:", newjavapath)
 		return newjavapath
 	} else {
