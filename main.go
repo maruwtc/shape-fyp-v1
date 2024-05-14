@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"myapp/lib/execjndi"
 	"myapp/lib/payload"
+	"myapp/lib/sysinfo"
 )
 
 func main() {
 	banner()
+
 	startPayload := make(chan bool)
 	go func() {
 		execjndi.ExecJNDI(startPayload)
@@ -30,9 +32,12 @@ func banner() {
 	|_______|_______|    |_______|_______|_______|   |___|_______|__| |__|_______|_______|_______|   by Chris Wong
 `
 	fmt.Println(Cyan + ban + Reset)
+	fmt.Println("------------------------------------------------------------------")
 	fmt.Println("This is a JNDI exploit tool.")
 	fmt.Println("This tool will start a JNDI exploit server and generate a payload.")
 	fmt.Println("Prefix with" + Red + " [+] " + Reset + "related to JNDI exploit server.")
+	fmt.Println("------------------------------------------------------------------")
+	sysinfo.ListInfo()
 	fmt.Println("------------------------------------------------------------------")
 }
 
