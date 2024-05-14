@@ -3,16 +3,17 @@ package sysinfo
 import (
 	"fmt"
 	"net"
+
+	externalip "github.com/glendc/go-external-ip"
 )
 
-func GetIP() (net.IP, error) {
+func GetIntIP() (net.IP, error) {
 	var (
 		ret    net.IP
 		err    error
 		ifaces []net.Interface
 		addrs  []net.Addr
 	)
-
 	if ifaces, err = net.Interfaces(); err == nil {
 		for _, i := range ifaces {
 			if addrs, err = i.Addrs(); err == nil {
@@ -20,7 +21,6 @@ func GetIP() (net.IP, error) {
 					if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 						if ipv4 := ipnet.IP.To4(); ipv4 != nil && ipv4.IsGlobalUnicast() {
 							ret = ipv4
-							// fmt.Println("IP:", ret.String())
 							return ret, nil
 						}
 					}
@@ -32,11 +32,27 @@ func GetIP() (net.IP, error) {
 	return nil, err
 }
 
-// func ListIP() {
-// 	ip, err := GetIP()
-// 	if err == nil {
-// 		fmt.Println("IP:", ip)
-// 	} else {
-// 		fmt.Println("Error:", err)
-// 	}
-// }
+func GetExtIP() (string, error) {
+	consensus := externalip.DefaultConsensus(nil, nil)
+	ip, err := consensus.ExternalIP()
+	if err != nil {
+		return "", err
+	}
+	return ip.String(), nil
+}
+
+func ListInfo() {
+	ip, err := GetIntIP()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("Internal IP:", ip)
+	ipString, err := GetExtIP()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	ip = net.ParseIP(ipString)
+	fmt.Println("External IP:", ip)
+}
