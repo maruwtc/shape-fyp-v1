@@ -12,7 +12,7 @@ import (
 func ExecJNDI(startPayload chan<- bool) {
 	jndipath := "./dependencies/jndi/JNDIExploit.jar"
 	javapath := findjava.FindPath()
-	ip, err := sysinfo.GetIP()
+	ip, err := sysinfo.GetIntIP()
 	if err != nil {
 		fmt.Println("[+] Error:", err)
 		return

