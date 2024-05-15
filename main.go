@@ -16,6 +16,7 @@ func main() {
 	ncat.StartNcat()
 	reverseshell.ReverseShell()
 	startPayload := make(chan bool)
+	exitChan := make(chan bool)
 	go func() {
 		execjndi.ExecJNDI(startPayload)
 	}()
@@ -28,12 +29,15 @@ func main() {
 			if scanner.Scan() {
 				response := scanner.Text()
 				if response != "yes" {
+					exitChan <- true
 					break
 				}
 			}
 		}
 	}()
-	select {}
+	<-exitChan
+	fmt.Println("Exiting...")
+	os.Exit(0)
 }
 
 func banner() {
