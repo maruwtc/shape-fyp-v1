@@ -32,11 +32,22 @@ func StartServer(host string, port int) {
 }
 
 func processClient(conn net.Conn) {
-	_, err := io.Copy(os.Stdout, conn)
+	// _, err := io.Copy(os.Stdout, conn)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// conn.Close()
+	defer conn.Close()
+	file, err := os.Create("received_data.txt")
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("[+] Error creating file: %s", err)
+		return
 	}
-	conn.Close()
+	defer file.Close()
+	_, err = io.Copy(file, conn)
+	if err != nil {
+		log.Printf("[+] Error writing data to file: %s", err)
+	}
 }
 
 var (
