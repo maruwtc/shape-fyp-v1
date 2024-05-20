@@ -6,7 +6,6 @@ import (
 	"myapp/lib/execjndi"
 	"myapp/lib/ncat"
 	"myapp/lib/payload"
-	"myapp/lib/reverseshell"
 	"myapp/lib/sysinfo"
 	"os"
 )
@@ -14,7 +13,7 @@ import (
 func main() {
 	banner()
 	ncat.StartNcat()
-	reverseshell.ReverseShell()
+	// reverseshell.ReverseShell()
 	startPayload := make(chan bool)
 	exitChan := make(chan bool)
 	go func() {

