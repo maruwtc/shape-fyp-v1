@@ -12,7 +12,6 @@ import (
 
 func main() {
 	banner()
-	ncat.StartNcat()
 	// startPayload := make(chan bool)
 	// exitChan := make(chan struct{})
 	// go func() {
@@ -38,6 +37,7 @@ func main() {
 	// os.Exit(0)
 	startPayload := make(chan bool)
 	go func() {
+		ncat.StartNcat()
 		execjndi.ExecJNDI(startPayload)
 	}()
 	go func() {
