@@ -43,6 +43,7 @@ func main() {
 	go func() {
 		<-startPayload
 		payload.PayloadInput()
+		fmt.Println("Press Ctrl+C to exit.")
 	}()
 	select {}
 }
