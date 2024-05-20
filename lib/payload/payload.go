@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/base64"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"myapp/lib/sysinfo"
 	"net/http"
 	"os"
@@ -20,7 +20,6 @@ func PayloadInput() {
 		fmt.Println("Error:", err)
 		return
 	}
-
 	fmt.Println("Testing curl...")
 	for {
 		exitChan := make(chan struct{})
@@ -51,7 +50,7 @@ func PayloadInput() {
 			continue
 		}
 		defer resp.Body.Close()
-		responseBody, err := ioutil.ReadAll(resp.Body)
+		responseBody, err := io.ReadAll(resp.Body)
 		if err != nil {
 			fmt.Println("Error:", err)
 			fmt.Println("Please try again.")
