@@ -58,6 +58,7 @@ func banner() {
 	|   |_| |       |    |       |       |   |_| |   |   |_____| |   _   |   |___|       |       |
 	|_______|_______|    |_______|_______|_______|   |___|_______|__| |__|_______|_______|_______|   by Chris Wong
 `
+	targetip, targetport := sysinfo.TargetInfo()
 	fmt.Println(Cyan + ban + Reset)
 	fmt.Println("------------------------------------------------------------------")
 	fmt.Println("This is a JNDI exploit tool.")
@@ -65,6 +66,7 @@ func banner() {
 	fmt.Println("Prefix with" + Red + " [+] " + Reset + "related to starting server.")
 	fmt.Println("------------------------------------------------------------------")
 	sysinfo.ListInfo()
+	fmt.Println("Target: " + targetip + ":" + targetport)
 	fmt.Println("------------------------------------------------------------------")
 }
 
