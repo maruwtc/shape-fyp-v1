@@ -7,27 +7,20 @@ import (
 	"myapp/lib/execjndi"
 	"myapp/lib/payload"
 	"myapp/lib/sysinfo"
-	"sync"
 )
 
 func main() {
 	banner()
 	startPayload := make(chan bool)
-	logChan := make(chan string)
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go execjndi.ExecJNDI(startPayload, logChan, &wg)
 	go func() {
-		for log := range logChan {
-			fmt.Print(log)
-		}
+		execjndi.ExecJNDI(startPayload)
 	}()
 	go func() {
 		<-startPayload
 		payload.PayloadInput()
 		fmt.Println("Press Ctrl+C to exit.")
 	}()
-	wg.Wait()
+	select {}
 }
 
 func banner() {
