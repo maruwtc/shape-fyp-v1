@@ -1,8 +1,6 @@
 package main
 
 import (
-	// "bufio"
-	// "os"
 	"fmt"
 	"myapp/lib/execjndi"
 	"myapp/lib/payload"

