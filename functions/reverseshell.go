@@ -1,4 +1,4 @@
-package reverseshell
+package functions
 
 import (
 	"fmt"

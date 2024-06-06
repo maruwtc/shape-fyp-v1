@@ -1,4 +1,4 @@
-package findjava
+package functions
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package sysinfo
+package functions
 
 import (
 	"fmt"

@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"myapp/lib/execjndi"
-	"myapp/lib/ncat"
-	"myapp/lib/payload"
-	"myapp/lib/sysinfo"
+	"functions/execjndi"
+	"functions/ncat"
+	"functions/payload"
+	"functions/sysinfo"
 )
 
 func main() {

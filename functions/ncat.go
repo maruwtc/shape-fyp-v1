@@ -1,11 +1,11 @@
-package ncat
+package functions
 
 import (
 	"flag"
 	"fmt"
+	"functions/sysinfo"
 	"io"
 	"log"
-	"myapp/lib/sysinfo"
 	"net"
 	"os"
 )

@@ -1,11 +1,11 @@
-package payload
+package functions
 
 import (
 	"bufio"
 	"encoding/base64"
 	"fmt"
+	"functions/sysinfo"
 	"io"
-	"myapp/lib/sysinfo"
 	"net/http"
 	"os"
 	"time"

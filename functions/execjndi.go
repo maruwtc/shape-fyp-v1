@@ -1,9 +1,9 @@
-package execjndi
+package functions
 
 import (
 	"fmt"
-	"myapp/lib/findjava"
-	"myapp/lib/sysinfo"
+	"functions/findjava"
+	"functions/sysinfo"
 	"os/exec"
 	"strings"
 	"sync"
