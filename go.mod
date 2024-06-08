@@ -1,5 +1,5 @@
-module functions
+module fpy
 
-go 1.22.0
+go 1.22.3
 
 require github.com/glendc/go-external-ip v0.1.0 // indirect
